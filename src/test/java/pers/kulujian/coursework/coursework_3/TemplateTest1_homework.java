@@ -93,9 +93,6 @@ public class TemplateTest1_homework {
 	
 	
 	public static void main(String[] args) {
-//		ApplicationContext ctx = new ClassPathXmlApplicationContext("jdbc-config.xml");
-//		EmpDao_homework empDao = ctx.getBean("empDao_homework", EmpDao_homework.class);
-//		System.out.println(empDao.queryAll());
 		
 		// 如何取得 eid=2 的員工姓名？ (請使用 java 8 stream)
 //		String ename = empDao.queryAll().stream()
@@ -110,11 +107,6 @@ public class TemplateTest1_homework {
 		 *  在每次的 查詢中 都可以將查詢時間的 Log 記錄下來
 		 *  +
 		*/
-		new TemplateTest1_homework().start();
-		
-		// 多筆查詢 1
-//		System.out.println(empDao.queryListEmps());
-		// 多筆查詢 2
-//		System.out.println(empDao.qreryListEmps2());
+		new TemplateTest1_homework().start();		
 	}
 }
