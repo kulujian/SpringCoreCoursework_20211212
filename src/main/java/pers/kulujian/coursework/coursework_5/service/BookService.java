@@ -1,5 +1,8 @@
 package pers.kulujian.coursework.coursework_5.service;
 
+import pers.kulujian.coursework.coursework_5.exception.InsufficientAmount;
+import pers.kulujian.coursework.coursework_5.exception.InsufficientQuantity;
+
 public interface BookService {
 	/*
 	 * 注意：
@@ -11,8 +14,8 @@ public interface BookService {
 	 *  ex. RuntimeException
 	 */
 	
-	void buyOne(Integer wid, Integer bid);
+	void buyOne(Integer wid, Integer bid) throws InsufficientAmount, InsufficientQuantity;
 	// 注意：點點點 要放對地方，這代表可以放陣列
-	void buyMany(Integer wid, Integer... bid);
+	void buyMany(Integer wid, Integer... bid) throws InsufficientAmount, InsufficientQuantity;
 
 }

@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import pers.kulujian.coursework.coursework_5.dao.BookDao;
+import pers.kulujian.coursework.coursework_5.exception.InsufficientAmount;
+import pers.kulujian.coursework.coursework_5.exception.InsufficientQuantity;
 
 @Service
 public class BookServiceImpl implements BookService{
@@ -54,16 +56,19 @@ public class BookServiceImpl implements BookService{
 	 *		 		   也就是說，當丟擲RunTimeException或其子類的例項時會進行回滾(Error也一樣)；從事務方法中丟擲的Checked exceptions不進行回滾。
 	 *				2、被try catch包住的異常，不回滾。
 	 */
-	@Transactional(propagation =  Propagation.REQUIRED)
+	@Transactional(propagation =  Propagation.REQUIRED,
+			rollbackFor = {InsufficientAmount.class, InsufficientQuantity.class},
+			noRollbackFor = {ArithmeticException.class})
 	/*
 	 * 	若未配置 Transaction 交易註解
 	 * 	下面執行之後會各自交易修改，導致有的方法已交易完成有的方法交易失敗
 	 *  例如：同筆交易內存庫量夠就先扣庫存，遇到金額不足就跳失敗，但庫存卻不會回加
 	 */
 	@Override
-	public void buyOne(Integer wid, Integer bid) {
+	public void buyOne(Integer wid, Integer bid) throws InsufficientAmount, InsufficientQuantity{
 		// 減去一本庫存
 		bookdao.updateStock(bid, 1);
+		// System.out.println(10/0); //產生 AritmeticException 錯誤 (根據上面的定義資料庫會不做回滾)
 		// 取得書籍價格
 		Integer price = bookdao.getPrice(bid);
 		// 減去錢包裡的金額
@@ -109,14 +114,16 @@ public class BookServiceImpl implements BookService{
 	 *		 		   也就是說，當丟擲RunTimeException或其子類的例項時會進行回滾(Error也一樣)；從事務方法中丟擲的Checked exceptions不進行回滾。
 	 *				2、被try catch包住的異常，不回滾。
 	 */
-	@Transactional(propagation =  Propagation.REQUIRED)
+	@Transactional(propagation =  Propagation.REQUIRED,
+			rollbackFor = {InsufficientAmount.class, InsufficientQuantity.class},
+			noRollbackFor = {ArithmeticException.class})
 	/*
 	 * 	若未配置 Transaction 交易註解
 	 * 	下面執行之後會各自交易修改，導致有的方法已交易完成有的方法交易失敗
 	 *  例如：同筆交易內存庫量夠就先扣庫存，遇到金額不足就跳失敗，但庫存卻不會回加
 	 */
 	@Override
-	public void buyMany(Integer wid, Integer... bids) {
+	public void buyMany(Integer wid, Integer... bids) throws InsufficientAmount, InsufficientQuantity{
 		/* 重覆執行 buyOne 容內
 		 *  1、減去庫存
 		 *	2、取得書籍價格
@@ -124,7 +131,10 @@ public class BookServiceImpl implements BookService{
 		 * 
 		 * 這邊會有log問題(紀錄五筆buyOne還是紀錄一筆buyMany)，這是HomeWork
 		 */
-		Stream.of(bids).forEach(bid -> buyOne(wid, bid));
+//		Stream.of(bids).forEach(bid -> buyOne(wid, bid));改寫的原因是無法拋出例外，但我們一定要拋例外給controller處理
+		for(Integer bid: bids) {
+			buyOne(wid,bid);
+		}
 		
 		
 	}

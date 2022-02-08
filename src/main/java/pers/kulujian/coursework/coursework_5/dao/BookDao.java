@@ -1,5 +1,8 @@
 package pers.kulujian.coursework.coursework_5.dao;
 
+import pers.kulujian.coursework.coursework_5.exception.InsufficientAmount;
+import pers.kulujian.coursework.coursework_5.exception.InsufficientQuantity;
+
 public interface BookDao {
 	/*
 	 * 注意：
@@ -13,6 +16,6 @@ public interface BookDao {
 	Integer getPrice(Integer bid); // 透過 bid 取得 price
 	Integer getStockAmount(Integer bid); // 透過 bid 取得 stock amount
 	Integer getWalletMoney(Integer wid); // 透過 wid 取得 wallent money
-	Integer updateStock(Integer bid, Integer amount); // 透過 bid 更新 stock amount
-	Integer updateWallet(Integer wid, Integer money); // 透過 wid 更新 wallet money
+	Integer updateStock(Integer bid, Integer amount) throws InsufficientQuantity; // 透過 bid 更新 stock amount
+	Integer updateWallet(Integer wid, Integer money) throws InsufficientAmount; // 透過 wid 更新 wallet money
 }
