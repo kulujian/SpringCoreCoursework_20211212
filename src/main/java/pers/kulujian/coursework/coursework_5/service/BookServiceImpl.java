@@ -68,7 +68,7 @@ public class BookServiceImpl implements BookService{
 	public void buyOne(Integer wid, Integer bid) throws InsufficientAmount, InsufficientQuantity{
 		// 減去一本庫存
 		bookdao.updateStock(bid, 1);
-		// System.out.println(10/0); //產生 AritmeticException 錯誤 (根據上面的定義資料庫會不做回滾)
+//		System.out.println(10/0); //產生 AritmeticException 錯誤 (根據上面的定義資料庫會不做回滾)
 		// 取得書籍價格
 		Integer price = bookdao.getPrice(bid);
 		// 減去錢包裡的金額
