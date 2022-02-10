@@ -34,6 +34,8 @@ create table if not exists wallet(
 create table if not exists order_log(
 	lid integer not null auto_increment,
 	logTime timestamp default current_timestamp,
+	customerNum integer not null,
+	customerName varchar(20) not null,
 	productCode integer not null,
 	productName varchar(20) not null,
 	productAmount integer not null,

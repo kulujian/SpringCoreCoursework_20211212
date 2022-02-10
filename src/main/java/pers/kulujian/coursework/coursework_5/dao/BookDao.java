@@ -13,7 +13,7 @@ public interface BookDao {
 	 *  若未先設定Impl實作時只能拋出 oncheck 的 exception
 	 *  ex. RuntimeException
 	 */
-	Integer getPrice(Integer bid); // 透過 bid 取得 price
+	Integer getPrice(Integer bid); // 透過 bid 取得 price(價格)
 	Integer getStockAmount(Integer bid); // 透過 bid 取得 stock amount
 	Integer getWalletMoney(Integer wid); // 透過 wid 取得 wallent money
 	Integer updateStock(Integer bid, Integer amount) throws InsufficientQuantity; // 透過 bid 更新 stock amount

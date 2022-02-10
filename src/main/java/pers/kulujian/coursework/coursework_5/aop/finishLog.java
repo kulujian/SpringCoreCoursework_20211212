@@ -1,6 +1,9 @@
 package pers.kulujian.coursework.coursework_5.aop;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Stream;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -11,6 +14,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import pers.kulujian.coursework.coursework_5.dao.BookDao;
@@ -21,6 +25,9 @@ public class finishLog {
 
 	@Autowired
 	private BookDao bookdao;
+	
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
 	
 	//PointCut 切點
 	@Pointcut(value = "execution(* pers.kulujian.coursework.coursework_5.controller.BookController.buyBook(..))")
@@ -72,7 +79,14 @@ public class finishLog {
 	public Object around(ProceedingJoinPoint joinPoint) {
 		Object result = null;
 		// 1. 前置通知
-//		System.out.println("環繞通知：前置通知");
+		String sql = "SELECT bid, bname, price FROM book WHERE bid = ?";
+		
+				
+		System.out.println(
+				Stream.of(jdbcTemplate.queryForList(sql, 1).get(0)).toArray()
+		);
+		
+		System.out.println("環繞通知：前置通知");
 		try {
 			// 2. 執行業務邏輯方法
 			result = joinPoint.proceed(); 
@@ -84,14 +98,26 @@ public class finishLog {
 		} finally {
 			// 5. 後置通知
 			System.out.println("環繞通知：後置通知");
-			if(result.equals(true)) {
-				System.out.println(bookdao.getPrice((Integer)joinPoint.getArgs()[1]));
-				System.out.println(bookdao.getStockAmount((Integer)joinPoint.getArgs()[1]));
-				System.out.println(bookdao.getWalletMoney((Integer)joinPoint.getArgs()[0]));
-			}
-			
+//			if(result.equals(true)) {
+//				System.out.println(bookdao.getPrice((Integer)joinPoint.getArgs()[1]));
+//				System.out.println(bookdao.getStockAmount((Integer)joinPoint.getArgs()[1]));
+//				System.out.println(bookdao.getWalletMoney((Integer)joinPoint.getArgs()[0]));
+//				salseLog(joinPoint);
+//			}
 		}
 		return result;
+	}
+	
+	
+	public Integer salseLog(ProceedingJoinPoint joinPoint) {
+		
+		
+		
+		
+		String sql = "insert into order_log (customerNum, customerName, productCode, productName, productAmount, productSumMoney)"
+				+ " values (?, ?, ?, ?, ?, ?)";
+		return jdbcTemplate.update(sql, 2, "kulu", 1, "Java", 1, 1*150);
+		
 	}
 	
 }
