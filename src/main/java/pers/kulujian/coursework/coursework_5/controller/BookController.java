@@ -13,25 +13,31 @@ public class BookController {
 	@Autowired
 	private BookService bookService;
 
-	public void buyBook(Integer wid, Integer bid) {
+	public boolean buyBook(Integer wid, Integer bid) {
 		try {
 			bookService.buyOne(wid, bid);
 			System.out.println("單筆購買 buyBook OK ！");
+			return true;
 		} catch (InsufficientQuantity e) {
 			System.err.println("庫存不足：" + e);
+			return false;
 		} catch (InsufficientAmount e) {
 			System.err.println("金額不足：" + e);
+			return false;
 		}
 	}
 
-	public void buyBooks(Integer wid, Integer... bids) {
+	public boolean buyBooks(Integer wid, Integer... bids) {
 		try {
 			bookService.buyMany(wid, bids);
 			System.out.println("多筆購買 buyBooks OK ！");
+			return true;
 		} catch (InsufficientQuantity e) {
 			System.err.println("庫存不足：" + e);
+			return false;
 		} catch (InsufficientAmount e) {
 			System.err.println("金額不足：" + e);
+			return false;
 		}
 	}
 }

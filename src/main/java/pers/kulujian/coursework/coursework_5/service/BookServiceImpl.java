@@ -57,8 +57,7 @@ public class BookServiceImpl implements BookService{
 	 *				2、被try catch包住的異常，不回滾。
 	 */
 	@Transactional(propagation =  Propagation.REQUIRED,
-			rollbackFor = {InsufficientAmount.class, InsufficientQuantity.class},
-			noRollbackFor = {ArithmeticException.class})
+			rollbackFor = {InsufficientAmount.class, InsufficientQuantity.class})
 	/*
 	 * 	若未配置 Transaction 交易註解
 	 * 	下面執行之後會各自交易修改，導致有的方法已交易完成有的方法交易失敗
@@ -73,6 +72,7 @@ public class BookServiceImpl implements BookService{
 		Integer price = bookdao.getPrice(bid);
 		// 減去錢包裡的金額
 		bookdao.updateWallet(wid, price);
+		
 	}
 
 	/*
@@ -115,8 +115,7 @@ public class BookServiceImpl implements BookService{
 	 *				2、被try catch包住的異常，不回滾。
 	 */
 	@Transactional(propagation =  Propagation.REQUIRED,
-			rollbackFor = {InsufficientAmount.class, InsufficientQuantity.class},
-			noRollbackFor = {ArithmeticException.class})
+			rollbackFor = {InsufficientAmount.class, InsufficientQuantity.class})
 	/*
 	 * 	若未配置 Transaction 交易註解
 	 * 	下面執行之後會各自交易修改，導致有的方法已交易完成有的方法交易失敗

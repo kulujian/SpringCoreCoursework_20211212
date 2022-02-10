@@ -13,18 +13,36 @@ public class BoodDaoImpl implements BookDao{
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
+	/**
+	 *  由產品代碼查詢產品價格
+	 * 	@param bid 產品代碼
+	 *  @param sql 資料庫語法
+	 *  @return Integer 產品價格
+	 */
 	@Override
 	public Integer getPrice(Integer bid) {
 		String sql = "select price from book where bid = ?";
 		return jdbcTemplate.queryForObject(sql, Integer.class, bid);
 	}
 
+	/**
+	 *  由產品代碼查詢庫存數量
+	 * 	@param bid 產品代碼
+	 *  @param sql 資料庫語法
+	 *  @return Integer 庫存數量
+	 */
 	@Override
 	public Integer getStockAmount(Integer bid) {
 		String sql = "select amount from stock where bid = ?";
 		return jdbcTemplate.queryForObject(sql, Integer.class, bid);
 	}
 
+	/**
+	 *  由錢包代碼查詢錢包餘額
+	 * 	@param wid 錢包代碼
+	 *  @param sql 資料庫語法
+	 *  @return Integer 錢包餘額
+	 */
 	@Override
 	public Integer getWalletMoney(Integer wid) {
 		String sql = "select money from wallet where wid = ?";
