@@ -2,6 +2,7 @@ package pers.kulujian.coursework.coursework_5.aop;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -30,7 +31,7 @@ public class finishLog {
 	private JdbcTemplate jdbcTemplate;
 	
 	//PointCut 切點
-	@Pointcut(value = "execution(* pers.kulujian.coursework.coursework_5.controller.BookController.buyBook(..))")
+	@Pointcut(value = "execution(* pers.kulujian.coursework.coursework_5.controller.BookController.buyBooks(..))")
 	public void pt() {}
 	
 //	@Before(value = "pt()")
@@ -39,22 +40,6 @@ public class finishLog {
 			"前置通知", 
 			joinPoint.getSignature().getName(), 
 			Arrays.toString(joinPoint.getArgs()));
-//		System.out.println("getKind       : "+joinPoint);
-//		System.out.println("getTarget     : "+joinPoint.getTarget());
-//		System.out.println("getThis       : "+joinPoint.getThis());
-//		System.out.println("getClass      : "+joinPoint.getClass());
-//		System.out.println("getStaticPart : "+joinPoint.getStaticPart());
-//		System.out.println("=====================================================================================");
-//		System.out.println("getSignature().getDeclaringTypeName() : "+joinPoint.getSignature().getDeclaringTypeName());
-//		System.out.println("getSignature().getModifiers()         : "+joinPoint.getSignature().getModifiers());
-//		System.out.println("getSignature().getDeclaringType()     : "+joinPoint.getSignature().getDeclaringType());
-//		System.out.println("getSignature().hashCode()             : "+joinPoint.getSignature().hashCode());
-//		System.out.println("getSignature().toString()             : "+joinPoint.getSignature().toString());
-//		System.out.println("getSignature().toShortString()        : "+joinPoint.getSignature().toShortString());
-//		System.out.println("getSignature().toLongString()         : "+joinPoint.getSignature().toLongString());
-//		System.out.println("getSignature().getClass()             : "+joinPoint.getSignature().getClass().get);
-		
-		
 	}
 	
 //	@After(value = "pt()")
@@ -64,7 +49,6 @@ public class finishLog {
 				joinPoint.getSignature().getName(), 
 				Arrays.toString(joinPoint.getArgs()));
 		
-//		System.out.println(bookdao.getPrice((Integer)joinPoint.getArgs()[1]));
 	}
 	
 //	@After(value = "pt()")
@@ -79,14 +63,8 @@ public class finishLog {
 	public Object around(ProceedingJoinPoint joinPoint) {
 		Object result = null;
 		// 1. 前置通知
-		String sql = "SELECT bid, bname, price FROM book WHERE bid = ?";
-		
-				
-		System.out.println(
-				Stream.of(jdbcTemplate.queryForList(sql, 1).get(0)).toArray()
-		);
-		
-		System.out.println("環繞通知：前置通知");
+		System.out.println(Stream.of(joinPoint.getArgs()).getClass());
+//		System.out.println("環繞通知：前置通知");
 		try {
 			// 2. 執行業務邏輯方法
 			result = joinPoint.proceed(); 
@@ -97,26 +75,30 @@ public class finishLog {
 			System.out.println("環繞通知：異常通知 e = " + ex);
 		} finally {
 			// 5. 後置通知
-			System.out.println("環繞通知：後置通知");
-//			if(result.equals(true)) {
-//				System.out.println(bookdao.getPrice((Integer)joinPoint.getArgs()[1]));
-//				System.out.println(bookdao.getStockAmount((Integer)joinPoint.getArgs()[1]));
-//				System.out.println(bookdao.getWalletMoney((Integer)joinPoint.getArgs()[0]));
+//			System.out.println("環繞通知：後置通知");
+			if(result.equals(true)) {
 //				salseLog(joinPoint);
-//			}
+			}
 		}
 		return result;
 	}
 	
 	
 	public Integer salseLog(ProceedingJoinPoint joinPoint) {
+		int wid = (int)joinPoint.getArgs()[0];
+		int bid = (int)joinPoint.getArgs()[1];
 		
-		
-		
+		String sql1 = "SELECT bname FROM book WHERE bid = ?";
+		String bname = jdbcTemplate.queryForObject(sql1, String.class, bid);
+		String sql2 = "SELECT wname FROM wallet WHERE wid = ?";
+		String wname = jdbcTemplate.queryForObject(sql2, String.class, wid);
+		int price = bookdao.getPrice(bid);
 		
 		String sql = "insert into order_log (customerNum, customerName, productCode, productName, productAmount, productSumMoney)"
 				+ " values (?, ?, ?, ?, ?, ?)";
-		return jdbcTemplate.update(sql, 2, "kulu", 1, "Java", 1, 1*150);
+		
+		System.out.printf("");
+		return jdbcTemplate.update(sql, wid, wname, bid, bname, 1, 1*price);
 		
 	}
 	
