@@ -18,8 +18,7 @@ public class TestBook {
 
 		// case 2 買多本
 		Integer wid = 1;
-		bookController.buyBooks(wid, 1,1,2,2);
+		bookController.buyBooks(wid, 1,1,2,2,2);
 		
 	}
-
 }
