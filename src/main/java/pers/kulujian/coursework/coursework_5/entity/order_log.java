@@ -2,7 +2,7 @@ package pers.kulujian.coursework.coursework_5.entity;
 
 import java.util.Date;
 
-public class order_log {
+public class Order_log {
 
 	// order_log 欄位
 	private Integer lid;
@@ -15,7 +15,7 @@ public class order_log {
 	private Integer productSumMoney;
 	
 	
-	public order_log() {
+	public Order_log() {
 //		super();
 	}
 	
